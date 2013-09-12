@@ -13,7 +13,7 @@ from astropy.io import fits
 
 
 def hdrtofn(h):
-    return h['OUTFILE'] + '%04i' % h['FRAMENO'] + '.fits.gz'
+    return h['OUTFILE'] + '%04i' % h['FRAMENO'] + '.fits'
 
 
 if len(argv) > 1:
@@ -28,6 +28,11 @@ print 'Found', len(oldfns), 'Files to rename')
     
 for i,fn in enumerate(oldfns):
     newfn = hdrtofn(fits.getheader(fn, 0))
+    
+    #fix up gzipped file names
+    if oldfns.endswith('.gz'):
+        newfn += '.gz'
+
     print 'Moving',fn ,'to',newfn,i+1,'of',len(oldfns)
     system(u'mv $fn $newfn')
     
